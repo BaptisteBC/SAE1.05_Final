@@ -1,6 +1,23 @@
 import numpy
 import tri
 import pickle
+import matplotlib.pyplot as plt
+
+
+def histogramme(data):
+    histo = {}
+    for sublist in data:
+        for val in sublist:
+            if val in histo:
+                histo[val] += 1
+            else:
+                histo[val] = 1
+
+    plt.bar(histo.keys(), histo.values())
+    plt.xlabel("Numéro")
+    plt.ylabel("Occurences")
+    plt.title("Histogramme Tirage Loto")
+    plt.show()
 
 
 def seed():
@@ -36,25 +53,25 @@ def tirage_loto(n, choix):
     if choix == 0:
         for i in range(n):
             tirage = numpy.random.choice(range(1, 46), 5, replace=False)
-            tirage_mult.append(tirage)
+            tirage_mult.append(tirage.tolist())
         return tirage_mult
     if choix == 1:
         for i in range(n):
             tirage = numpy.random.choice(range(1, 46), 5, replace=False)
             tri.tri_cocktail(tirage)
-            tirage_mult.append(tirage)
+            tirage_mult.append(tirage.tolist())
         return tirage_mult
     if choix == 2:
         for i in range(n):
             tirage = numpy.random.choice(range(1, 46), 5, replace=False)
             tri.tri_insertion(tirage)
-            tirage_mult.append(tirage)
+            tirage_mult.append(tirage.tolist())
         return tirage_mult
     if choix == 3:
         for i in range(n):
             tirage = numpy.random.choice(range(1, 46), 5, replace=False)
             tri.tri_fusion(tirage)
-            tirage_mult.append(tirage)
+            tirage_mult.append(tirage.tolist())
         return tirage_mult
 
 
@@ -63,3 +80,9 @@ choix = tri_choice()
 
 with open("tirage_loto.bin", "wb") as fichier:
     pickle.dump(tirage_loto(n, choix), fichier, pickle.HIGHEST_PROTOCOL)
+
+ask = input("Voulez-vous créer un histogramme de vos tirages ? (oui/non)")
+if ask == "oui":
+    histogramme(tirage_loto(n, choix))
+else:
+    print(tirage_loto(n, choix))
